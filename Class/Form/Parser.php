@@ -59,7 +59,7 @@ class Form_Parser {
 	 */
 	public function parseFieldset(array $data)
 	{
-		$legend = $data[0];
+		$legend = $data[1];
 
 		$result = [];
 		$result['legend'] = $legend;
@@ -77,11 +77,12 @@ class Form_Parser {
 	public function parseInput(array $data)
 	{
 		$label = $data[0];
-		$name  = strtolower($label);
+		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
 		$type  = str_replace('input:', '', $data[1]);
-		$options = $data[2];
+		$options = str_replace('[', '', str_replace(']', '', $data[2]));
 		$required = ($data[3] == 'required');
 		$attributes = [];
+		$arrOptions = [];
 
 		if ( isset($data[4]) )
 		{
@@ -90,11 +91,22 @@ class Form_Parser {
 
 		if ( $type == 'radio' or $type == 'checkbox' )
 		{
-			$options = str_replace('[', '', $options);
-			$options = str_replace(']', '', $options);
+			$options = str_getcsv($options,',', "'");
 
-			$options = explode(',', $options);
+			foreach ($options as $o)
+			{
+				list ($value, $oLabel) = explode('|',$o);
+
+				if ( is_null($oLabel) )
+				{
+					$oLabel = $value;
+				}
+
+				$arrOptions[] = ['value' => $value, 'label' => $oLabel];
+			}
 		}
+
+		HTML::addAttribute('type', $type, $attributes);
 
 		$result = [];
 
@@ -102,7 +114,7 @@ class Form_Parser {
 		$result['name'] = $name;
 		$result['type'] = 'input';
 		$result['required'] = $required;
-		$result['options'] = $options;
+		$result['options'] = $arrOptions;
 		$result['attributes'] = $attributes;
 
 		return $result;
@@ -117,7 +129,7 @@ class Form_Parser {
 	public function parseSelect(array $data)
 	{
 		$label = $data[0];
-		$name = strtolower($label);
+		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
 		$type = str_replace('select:', '', $data[1]);
 		$options = str_replace('[', '', str_replace(']', '', $data[2]));
 		$required = ($data[3] == 'required');
@@ -136,7 +148,7 @@ class Form_Parser {
 		}
 
 		// Evaluate all select options passed.
-		$options = explode(',', $options);
+		$options = str_getcsv($options,',', "'");
 
 		foreach ($options as $o)
 		{
@@ -169,7 +181,54 @@ class Form_Parser {
 	 */
 	public function parseTextArea(array $data)
 	{
-		throw new Exception('Method has not yet been implemented');
+		$label = $data[0];
+		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
+		$required = ($data[3] == 'required');
+		$attributes = [];
+
+		// Check if any custom attributes have been passed
+		if ( isset($data[4]) )
+		{
+			$attributes = $this->parseAttributes($data[4]);
+		}
+
+		$result['label'] = $label;
+		$result['name'] = $name;
+		$result['type'] = 'textarea';
+		$result['required'] = $required;
+		$result['attributes'] = $attributes;
+
+		return $result;
+	}
+
+	/**
+	 * Parse one line as a Button
+	 * @param  array  $data The line passed by parseLine.
+	 * @return array         Parsed data as an associative array.
+	 */
+	public function parseButton(array $data)
+	{
+		$label = $data[0];
+		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
+		$type  = str_replace('button:', '', $data[1]);
+		$value = empty($data[3]) ? $name : $data[3];
+		$attributes = [];
+
+		if ( isset($data[4]) )
+		{
+			$attributes = $this->parseAttributes($data[4]);
+		}
+
+		HTML::addAttribute('type', $type, $attributes);
+
+		$result = [];
+
+		$result['label'] = $label;
+		$result['name'] = $name;
+		$result['type'] = 'button';
+		$result['attributes'] = $attributes;
+
+		return $result;
 	}
 
 	/**

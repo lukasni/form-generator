@@ -23,6 +23,14 @@ class HTML {
 		return $result;
 	}
 
+	public static function addAttribute($key, $value, array &$target)
+	{
+		if ( ! array_key_exists($key, $target))
+		{
+			$target[$key] = $value;
+		}
+	}
+
 	/**
 	 * Generate a string of HTML- or XML Attributes from an array of key/value pairs.
 	 * @param  array  $attributes key/value paired array of attributes.
