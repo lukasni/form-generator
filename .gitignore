@@ -44,3 +44,5 @@ build/config/buildinfo.properties
 
 # project specific files
 local/
+docs/
+phpdoc-*

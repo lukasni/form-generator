@@ -7,8 +7,9 @@ class Form_Writer {
 
 	protected $indent = 0;
 	protected $fieldset = false;
+	protected $final = false;
 
-	public $output = '';
+	protected $output = '';
 
 	/**
 	 * Initialize a HTML form.
@@ -41,7 +42,23 @@ class Form_Writer {
 		$this->indent--;
 		$this->putLine('</form>');
 
+		$this->final = true;
+
 		return $this;
+	}
+
+	/**
+	 * Returns the finished output.
+	 * @return string complete output of the form.
+	 */
+	public function render()
+	{
+		if ( ! $this->final )
+		{
+			$this->finish();
+		}
+		
+		return $this->output;
 	}
 
 	/**
