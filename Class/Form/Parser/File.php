@@ -1,6 +1,6 @@
 <?php
 
-class Form_Parser {
+class Form_Parser_File {
 
 
 	/**
@@ -57,7 +57,7 @@ class Form_Parser {
 	 * @param  array  $data The line passed by parseLine
 	 * @return array        Currently returns the unmodified legend (everything after the colon)
 	 */
-	public function parseFieldset(array $data)
+	protected function parseFieldset(array $data)
 	{
 		$legend = $data[1];
 
@@ -74,7 +74,7 @@ class Form_Parser {
 	 * @param  array  $data The line passed by parseLine
 	 * @return array        Parsed data as an associative array
 	 */
-	public function parseInput(array $data)
+	protected function parseInput(array $data)
 	{
 		$label = $data[0];
 		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
@@ -126,7 +126,7 @@ class Form_Parser {
 	 * @param  array  $data The line passed by parseLine
 	 * @return array        Parsed data as an associative array.
 	 */
-	public function parseSelect(array $data)
+	protected function parseSelect(array $data)
 	{
 		$label = $data[0];
 		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
@@ -179,7 +179,7 @@ class Form_Parser {
 	 * @param  array  $data The line passed by parseLine
 	 * @return array        Parsed data as an associative array
 	 */
-	public function parseTextArea(array $data)
+	protected function parseTextArea(array $data)
 	{
 		$label = $data[0];
 		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
@@ -206,7 +206,7 @@ class Form_Parser {
 	 * @param  array  $data The line passed by parseLine.
 	 * @return array         Parsed data as an associative array.
 	 */
-	public function parseButton(array $data)
+	protected function parseButton(array $data)
 	{
 		$label = $data[0];
 		$name = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $label));
