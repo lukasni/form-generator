@@ -6,9 +6,10 @@ class Input_Database {
 
 	public $table;
 
-	public function __construct($dbname, $dbhost, $dbuser, $dbpass)
+	public function __construct(PDO $dbc, $table = '')
 	{
-		$dbc = new PDO("mysql:dbname=$dbname;host=$dbhost", $dbuser, $dbpass);
+		$this->dbc = $dbc;
+		$this->table = $table;
 	}
 
 	public function setTable($table_name)
@@ -16,15 +17,21 @@ class Input_Database {
 		$this->table = $table;
 	}
 
-	public function describe()
+	public function getFields()
 	{
-		$sql = 'DESCRIBE :table';
+		return $this->describe();
+	}
 
-		$stmt = $this->dbh->prepare($sql);
-		$stmt->bindParam(':table', $this->table);
+	protected function describe()
+	{
+		$sql = 'DESCRIBE '.$this->table;
+
+		$stmt = $this->dbc->prepare($sql);
 		$stmt->execute();
 
 		return $stmt->fetchAll();
 	}
+
+
 
 }

@@ -81,13 +81,21 @@ class Form_Parser_DB {
 		}
 	}
 
+	/**
+	 * Parser for ENUM Types. 5 or more ENUM options will generate a Select dropdown,
+	 * less than 5 Options will generate a group of radio buttons.
+	 * @param  array  $line Single row of the database result.
+	 * @return array        Array readable by Form_Writer representing the database field.
+	 */
 	protected function parseEnum(array $line)
 	{
+		// Get all options from the enum.
 		$enum_options = str_replace('enum(', '', str_replace(')', '', $line['Type']));
 		$options = str_getcsv($enum_options, ',', "'");
 
 		$result = $this->prepareResult($line);
 
+		// Generate the options array for Form_Writer
 		foreach ($options as $key => $o)
 		{
 			$result['options'][$key]['label'] = $o;
@@ -109,6 +117,13 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for data type TEXT. Will generate a Textarea. 
+	 * VARCHAR fields with a length greater than 255 will be redirected here.
+	 * 	
+	 * @param  array  $line Single row of the database result for DESCRIBE
+	 * @return array        Array readable by Form_Writer
+	 */
 	protected function parseText(array $line)
 	{
 		$result = $this->prepareResult($line);
@@ -117,6 +132,11 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for data type BLOB. Will generate a field input.
+	 * @param  array  $line Single row of the database result for DESCRIBE
+	 * @return array        Array readable by Form_Writer
+	 */
 	protected function parseBlob(array $line)
 	{
 		$result = $this->prepareResult($line);
@@ -126,10 +146,18 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for Date and Time datatypes. Will generate a date or datetime input.
+	 * @param  array  $line Single row of the database result for DESCRIBE
+	 * @param  string $type Datatype determined in parseLine()
+	 * @return array        Array readable by Form_Writer
+	 */
 	protected function parseDateTime(array $line, $type)
 	{
 		$result = $this->prepareResult($line);
 
+		// If it is a date/time field, datetime input will be generated.
+		// otherwise, date only will be assumed.
 		if ($type == 'datetime' || $type == 'timestame')
 		{
 			$result['attributes']['type'] = 'datetime';
@@ -142,19 +170,23 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for numeric datatypes. Will generate a number input.
+	 * @param  array  $line Single row of the database result for DESCRIBE
+	 * @param  string $type Datatype determined in parseLine()
+	 * @return array        Array readable by Form_Writer
+	 */
 	protected function parseNum(array $line, $type)
 	{
 		$result = $this->prepareResult($line);
 
 		$result['attributes']['type'] = 'number';
 
+		// Check if the number is saved unsigned
 		$unsigned = (strpos($line['Type'], 'unsigned') !== false);
 
+		// Determine the min and max size for the number.
 		switch ($type) {
-			case 'int':
-				$result['attributes']['min'] = $unsigned ? 0 : -2147483648;
-				$result['attributes']['max'] = $unsigned ? 4294967295 : 2147483647;
-				break;
 			case 'tinyint':
 				$result['attributes']['min'] = $unsigned ? 0 : -128;
 				$result['attributes']['max'] = $unsigned ? 255 : 127;
@@ -167,6 +199,10 @@ class Form_Parser_DB {
 				$result['attributes']['min'] = $unsigned ? 0 : -8388608;
 				$result['attributes']['max'] = $unsigned ? 16777215 : 8388607;
 				break;
+			case 'int':
+				$result['attributes']['min'] = $unsigned ? 0 : -2147483648;
+				$result['attributes']['max'] = $unsigned ? 4294967295 : 2147483647;
+				break;
 			case 'bigint':
 				$result['attributes']['min'] = $unsigned ? 0 : -9223372036854775808;
 				$result['attributes']['max'] = $unsigned ? 18446744073709551615 : 9223372036854775807;
@@ -176,18 +212,42 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for short text and other datatypes. Will generate a text input
+	 * If the string "password" is found in the name of the field, type password will be assumed.
+	 * @param  array  $line Single row of the database result for DESCRIBE
+	 * @return array        Array readable by Form_Writer
+	 */
 	protected function parseInput(array $line)
 	{
 		$result = $this->prepareResult($line);
 
-		$result['attributes']['type'] = 'text';
+		// Check if the field might contain a password
+		if ( strpos($result['label'], 'password'))
+		{
+			$result['attributes']['type'] = 'password';
+		}
+		else
+		{
+			$result['attributes']['type'] = 'text';	
+		}
 
+		// Determine the max length
 		$start = strpos($line['Type'], '(')+1;
 		$length = strpos($line['Type'], ')')-$start;
 		$maxlength = substr($line['Type'], $start, $length);
 
+		// Set the maxlength attribute if applicable.
 		if ( is_numeric($maxlength) )
 		{
+			// Fields with a length greater than 255 will be treated as textarea,
+			// type password excepted.
+			if ( $maxlength > 255 && ($result['attributes']['type'] !== 'password') )
+			{
+				$result['type'] = 'textarea';
+				unset($result['attributes']['type']);
+			}
+
 			$result['attributes']['maxlength'] = $maxlength;
 		}
 
