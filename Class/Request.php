@@ -38,14 +38,14 @@ class Request {
 		$uri = str_replace(BASEURL, '', $_SERVER['REQUEST_URI']);
 		$url_tokens = explode('/', $uri);
 
-		$controller	= !empty($url_tokens['0']) ? $url_tokens[0] : 'index';
-		$action 	= array_key_exists('1', $url_tokens) ? $url_tokens[1] : 'index';
-		$params 	= array_key_exists('2', $url_tokens) ? array_slice($url_tokens, 2) : null;
+		$controller	= !empty($url_tokens['0']) ? $url_tokens[0] : '';
+		$action 	= array_key_exists('1', $url_tokens) ? $url_tokens[1] : '';
+		$params 	= array_key_exists('2', $url_tokens) ? array_slice($url_tokens, 2) : array();
 
 		$method 	= isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 		$requested_with = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
 
-		$data 		= file_get_contents('php://input');
+		$data 		= $method == 'GET' ? '' : file_get_contents('php://input');
 
 		$request 	= new Request($uri, $controller, $action, $params, $method, $requested_with, $data);
 
