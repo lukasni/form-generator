@@ -1,0 +1,52 @@
+.form-vertical {
+	background: #929487;
+	font-family: sans-serif;
+	font-size: 86%;
+	color: #F4F5ED;
+}
+.form-vertical label {
+	display: block;
+	text-align: right;
+	width: 140px;
+	height: 42px;
+	padding: 4px 2px;
+	box-sizing: border-box;	
+	float: left;
+}
+
+.form-vertical input,
+.form-vertical select,
+.form-vertical textarea {
+	float: left;
+	padding: 4px 2px;
+	width: 200px;
+	margin: 2px 0 20px 10px;
+	box-sizing: border-box;
+	border: 0;
+	background: #F4F5ED;
+}
+
+.form-vertical input,
+.form-vertical select {
+	height: 24px;
+}
+
+.form-vertical input[type=file] {
+	background: transparent;
+	color: #F4F5ED;
+	padding: 0;
+}
+
+.form-vertical button {
+	clear: both;
+	margin-left: 150px;
+	width: 200px;
+	height: 31px;
+	border: 0;
+	background: #89CEDE;
+	text-align: center;
+	line-height: 31px;
+	color: #F4F5ED;
+	font-size: 11px;
+	font-weight: bold;
+}

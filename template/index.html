@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Database Form Generator</title>
+
+	<link rel="stylesheet" type="text/css" href="../public/css/form.css">
+<style type="text/css">
+#dblogin {
+	margin: 0 auto;
+	padding: 14px;
+	width: 400px;
+}
+</style>
+
+</head>
+<body>
+	<h1>Form Generator</h1>
+
+	<form action="{{submit-action}}" class="form-vertical" id="dblogin">
+		<fieldset>
+			<legend>Database Info</legend>
+
+			<label for="host">DB Host</label>
+			<input type="text" name="host" id="host" required>
+
+			<label for="user">DB User</label>
+			<input type="text" name="user" id="user" required>
+
+			<label for="password">DB Password</label>
+			<input type="password" name="password" id="password" required>
+
+			<label for="database">Database</label>
+			<select name="database" id="database" required>
+				<option value="">Not loaded</option>
+			</select>
+
+			<label for="table">Table</label>
+			<select name="table" id="table" required>
+				<option value="">Not loaded</option>
+			</select>
+
+			<button>Generate Form</button>
+		</fieldset>
+	</form>
+</body>
+</html>
