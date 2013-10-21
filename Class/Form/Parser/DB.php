@@ -53,10 +53,19 @@ class Form_Parser_DB {
 			case 'enum':
 				return $this->parseEnum($line);
 
+			case 'set':
+				return $this->parseSet($line);
+
 			case 'text':
+			case 'tinytext':
+			case 'mediumtext':
+			case 'longtext':
 				return $this->parseText($line);
 
 			case 'blob':
+			case 'tinyblob':
+			case 'mediumblob':
+			case 'longblob':
 				return $this->parseBlob($line);
 
 			case 'date':
@@ -117,6 +126,11 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	protected function parseSet(array $line)
+	{
+		throw new Exception('Parsing for datatype SET has not yet been implemented.');
+	}
+
 	/**
 	 * Parser for data type TEXT. Will generate a Textarea. 
 	 * VARCHAR fields with a length greater than 255 will be redirected here.
@@ -158,9 +172,9 @@ class Form_Parser_DB {
 
 		// If it is a date/time field, datetime input will be generated.
 		// otherwise, date only will be assumed.
-		if ($type == 'datetime' || $type == 'timestame')
+		if ($type == 'datetime' || $type == 'timestamp')
 		{
-			$result['attributes']['type'] = 'datetime';
+			$result['attributes']['type'] = 'datetime-local';
 		} 
 		else 
 		{
@@ -207,6 +221,8 @@ class Form_Parser_DB {
 				$result['attributes']['min'] = $unsigned ? 0 : -9223372036854775808;
 				$result['attributes']['max'] = $unsigned ? 18446744073709551615 : 9223372036854775807;
 				break;
+			default:
+				$result['attributes']['step'] = "any";
 		}
 
 		return $result;
@@ -222,10 +238,20 @@ class Form_Parser_DB {
 	{
 		$result = $this->prepareResult($line);
 
-		// Check if the field might contain a password
-		if ( strpos($result['label'], 'password'))
+		// Check if the field name implies a specific input type
+		if ( strpos($result['label'], 'password') !== false)
 		{
 			$result['attributes']['type'] = 'password';
+		}
+		else if ( (strpos($result['label'], 'email')  !== false) 
+			   || (strpos($result['label'], 'e-mail') !== false) )
+		{
+			$result['attributes']['type'] = 'email';
+		}
+		else if ( (strpos($result['label'], 'url')  !== false)
+			   || (strpos($result['label'], 'link') !== false) )
+		{
+			$result['attributes']['type'] = 'url';
 		}
 		else
 		{
@@ -242,7 +268,7 @@ class Form_Parser_DB {
 		{
 			// Fields with a length greater than 255 will be treated as textarea,
 			// type password excepted.
-			if ( $maxlength > 255 && ($result['attributes']['type'] !== 'password') )
+			if ( $maxlength > 255 && ($result['attributes']['type'] === 'text') )
 			{
 				$result['type'] = 'textarea';
 				unset($result['attributes']['type']);

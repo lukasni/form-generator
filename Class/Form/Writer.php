@@ -129,6 +129,7 @@ class Form_Writer {
 		if ($data['required'] === true)
 		{
 			HTML::addAttribute('required', 'required', $data['attributes']);
+			array_unshift($data['options'], ['value' => '', 'label' => 'Please select...']);
 		}
 		
 		// Generate label and select tag, add to output.
