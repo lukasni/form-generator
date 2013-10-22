@@ -22,17 +22,17 @@ class Router {
 			$controller .= $request->controller;
 		}
 
-		if ( is_subclass_of($controller, 'Controller_Base') )
+		if ( is_subclass_of($controller, 'Controller') )
 		{
 			return new $controller($request);
 		}
 		else
 		{
-			throw new DomainException('Controller '.$controller.' does not exist or does not extend Controller_Base');
+			throw new DomainException('Controller '.$controller.' does not exist or does not extend Controller');
 		}
 	}
 
-	public static function executeAction($request, Controller_Base &$controller)
+	public static function executeAction($request, Controller &$controller)
 	{
 		$action = self::ACTION_PREFIX;
 
