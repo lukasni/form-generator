@@ -25,6 +25,9 @@ abstract class Controller_Template extends Controller {
 		$this->styles[] = ['href' => 'css/main.css'];
 		$this->styles[]	= ['href' => 'css/form.css'];
 
+		$this->scripts[] = ['src' => 'js/vendor/jQuery.min.js'];
+		$this->scripts[] = ['src' => 'js/main.js'];
+
 		$this->base_url = "http://localhost/form-generator/";
 		$this->lang = 'en';
 
@@ -60,7 +63,7 @@ abstract class Controller_Template extends Controller {
 		}
 		else
 		{
-			$this->response->body($this->body);
+			$this->response->body($this->content);
 		}
 
 		parent::after();

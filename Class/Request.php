@@ -93,7 +93,7 @@ class Request {
 
 		$data 		= $method == 'GET' ? $get_params : file_get_contents('php://input');
 		$pdata = [];
-		
+
 		if ( ! empty($data) )
 		{
 			parse_str($data, $pdata);
@@ -102,6 +102,41 @@ class Request {
 		$request 	= new Request($uri, $controller, $action, $params, $method, $requested_with, $pdata);
 
 		return $request;
+	}
+
+	public function data($key, $default = null)
+	{
+		if ( array_key_exists($key, $this->data) )
+		{
+			return $this->data[$key];
+		}
+		else
+		{
+			return $default;
+		}
+	}
+
+	/**
+	 * Detect if the request was an ajax request.
+	 * 
+	 * @return boolean True if $requested_with == xmlhttprequest, False otherwise.
+	 */
+	public function isAjax()
+	{
+		return strtolower($this->requested_with) == 'xmlhttprequest';
+	}
+
+	/**
+	 * Get controller object via the Router class, execute action and echo the response body.
+	 * TODO: Add proper response handling allowing for HMVC Request flow.
+	 */
+	public function execute()
+	{
+		$controller = Router::getController($this);
+
+		Router::executeAction($this, $controller);
+
+		echo $controller->execute();
 	}
 
 	/**
@@ -139,29 +174,6 @@ class Request {
 
 			return $result;
 		}
-	}
-
-	/**
-	 * Detect if the request was an ajax request.
-	 * 
-	 * @return boolean True if $requested_with == xmlhttprequest, False otherwise.
-	 */
-	public function isAjax()
-	{
-		return strtolower($this->requested_with) == 'xmlhttprequest';
-	}
-
-	/**
-	 * Get controller object via the Router class, execute action and echo the response body.
-	 * TODO: Add proper response handling allowing for HMVC Request flow.
-	 */
-	public function execute()
-	{
-		$controller = Router::getController($this);
-
-		Router::executeAction($this, $controller);
-
-		echo $controller->execute();
 	}
 
 }

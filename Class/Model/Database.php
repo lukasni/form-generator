@@ -16,8 +16,15 @@ class Model_Database {
 
 	public function __construct($host, $user, $password, $database = null)
 	{
-		$dsn = 'mysql:host='.$host.(is_null($database) ? '' : $database);
-		$this->dbh = new PDO('mysql:host='.$host, $user, $password);
+		$dsn = 'mysql:host='.$host;
+
+		if ( ! is_null($database) ) 
+		{
+			$dsn .= ';dbname='.$database;
+		}
+
+		$this->dbh = new PDO($dsn, $user, $password);
+		$this->database = $database;
 	}
 
 	public function useDatabase($database)
