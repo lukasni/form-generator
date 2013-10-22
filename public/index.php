@@ -10,4 +10,11 @@ define('BASEURL', $base_url);
 
 require_once(APPPATH.'bootstrap.php');
 
-$request = Request::instance();
+try 
+{
+	$request = Request::instance()->execute();
+}
+catch (Exception $e)
+{
+	echo "ERROR: ".$e->getMessage();
+}

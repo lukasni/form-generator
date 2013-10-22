@@ -10,16 +10,16 @@ class Router {
 
 	public static function getController(Request $request)
 	{
-		$controller = CONTROLLER_PREFIX;
+		$controller = self::CONTROLLER_PREFIX;
 		$result = null;
 
-		if ( empty($request->controller) )
+		if ( $request->controller == '' )
 		{
-			$controller .= DEFAULT_CONTROLLER;
+			$controller .= self::DEFAULT_CONTROLLER;
 		}
 		else
 		{
-			$controller .= $controller;
+			$controller .= $request->controller;
 		}
 
 		if ( is_subclass_of($controller, 'Controller_Base') )
@@ -32,13 +32,13 @@ class Router {
 		}
 	}
 
-	public static function getAction($request, Controller_Base $controller)
+	public static function executeAction($request, Controller_Base &$controller)
 	{
-		$action = ACTION_PREFIX;
+		$action = self::ACTION_PREFIX;
 
-		if ( empty($request->action) )
+		if ( $request->action == '' )
 		{
-			$action .= DEFAULT_ACTION;
+			$action .= self::DEFAULT_ACTION;
 		}
 		else
 		{
@@ -53,7 +53,7 @@ class Router {
 		}
 		else
 		{
-			throw new BadMethodCallException('Action '.$action.' does not exist in '.$controller);
+			throw new BadMethodCallException('Action '.$action.' does not exist in '.get_class($controller));
 		}
 	}
 

@@ -57,4 +57,13 @@ class Request {
 		return strtolower($this->requested_with) == 'xmlhttprequest';
 	}
 
+	public function execute()
+	{
+		$controller = Router::getController($this);
+
+		Router::executeAction($this, $controller);
+
+		echo $controller->execute();
+	}
+
 }

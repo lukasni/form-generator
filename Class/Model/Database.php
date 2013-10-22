@@ -53,7 +53,7 @@ class Model_Database {
 
 		$query_result = $this->dbh->query('SHOW TABLES')->fetchAll();
 
-		$reqult = [];
+		$result = [];
 
 		foreach ($query_result as $q)
 		{
