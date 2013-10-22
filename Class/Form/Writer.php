@@ -18,9 +18,18 @@ class Form_Writer {
 	 *
 	 * @return  Form_Writer returns the parent Object for method chaining.
 	 */
-	public function init($action = '', $method='POST')
+	public function init($action = '', $method='POST', $attributes = [])
 	{
-		$this->putLine(HTML::tag('form', ['action' => $action, 'method' => $method]));
+		if ( ! array_key_exists('action', $attributes) )
+		{
+			$attributes['action'] = $action;
+		}
+		if ( ! array_key_exists('method', $attributes) )
+		{
+			$attributes['method'] = $method;
+		}
+
+		$this->putLine(HTML::tag('form', $attributes));
 		$this->indent++;
 
 		return $this;
