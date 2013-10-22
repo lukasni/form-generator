@@ -1,0 +1,34 @@
+<h1>Database Login</h1>
+
+<form action="{{submit-action}}" method="post" class="form-vertical" id="dblogin">
+	<fieldset>
+		<legend>Database Info</legend>
+
+		<label for="host">DB Host</label>
+		<input type="text" name="host" id="host" required>
+
+		<label for="user">DB User</label>
+		<input type="text" name="user" id="user" required>
+
+		<label for="password">DB Password</label>
+		<input type="password" name="password" id="password" required>
+
+		<label for="database">Database</label>
+		<select name="database" id="database" required>
+			<option value="">Not loaded</option>
+			<option value="foo">Foo</option>
+			<option value="bar">Bar</option>
+			<option value="baz">Baz</option>
+		</select>
+
+		<label for="table">Table</label>
+		<select name="table" id="table" required>
+			<option value="">Not loaded</option>
+			<option value="foobar">FooBar</option>
+			<option value="foobaz">FooBaz</option>
+			<option value="barbaz">BarBaz</option>
+		</select>
+
+		<button>Generate Form</button>
+	</fieldset>
+</form>

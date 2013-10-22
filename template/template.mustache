@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+	{{#meta}}
+	<meta name="{{name}}" content="{{content}}">
+	{{/meta}}
+	<meta charset="{{charset}}">
+
+	<title>{{page_title}}</title>
+
+	<base href="{{base_url}}">
+
+	{{#styles}}
+	<link rel="stylesheet" href="{{href}}">
+	{{/styles}}
+
+	{{#icons}}
+	<link rel="{{rel}}" href="">
+	{{/icons}}
+
+</head>
+<body>
+	{{{content}}}
+
+	{{#scripts}}
+	<script type="text/javascript" src="{{}}"></script>
+	{{/scripts}}
+</body>
+</html>

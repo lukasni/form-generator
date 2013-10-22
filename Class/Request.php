@@ -92,23 +92,27 @@ class Request {
 		$requested_with = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
 
 		$data 		= $method == 'GET' ? $get_params : file_get_contents('php://input');
-
+		$pdata = [];
+		
 		if ( ! empty($data) )
 		{
-			$data = Request::parse_data($data);
+			parse_str($data, $pdata);
 		}
 
-		$request 	= new Request($uri, $controller, $action, $params, $method, $requested_with, $data);
+		$request 	= new Request($uri, $controller, $action, $params, $method, $requested_with, $pdata);
 
 		return $request;
 	}
 
 	/**
 	 * Parse request data
+	 *
+	 * TODO: To be deleted, replaced by parse_str
+	 * 
 	 * @param  string $data Data gotten from a http request
 	 * @return array        Reuqest data parsed as an array of key/value pairs.
 	 */
-	public function parse_data($data)
+	public function parseData($data)
 	{
 		if ( strpos($data, '=') === false )
 		{
@@ -142,7 +146,7 @@ class Request {
 	 * 
 	 * @return boolean True if $requested_with == xmlhttprequest, False otherwise.
 	 */
-	public function is_ajax()
+	public function isAjax()
 	{
 		return strtolower($this->requested_with) == 'xmlhttprequest';
 	}

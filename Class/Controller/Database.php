@@ -1,31 +1,25 @@
 <?php
 
-class Controller_Database extends Controller {
+class Controller_Database extends Controller_Template {
 
-	public function action_test()
+	public function action_login()
 	{
-		$test = <<<EOT
-<form action="http://localhost/form-generator/Database/process" method="get">
-	<input type="text" name="test1"><br>
-	<input type="text" name="test2"><br>
-	<input type="text" name="test3"><br>
-	<button type="submit">Submit</button>
-</form>
-EOT;
-		$this->response->body($test);
-	}
+		$m = Mustache::factory();
 
-	public function action_process()
-	{
-		print_r($this->request->data);
-	}
+		$data = [
+			'form_action' => 'Database/Login',
+			'databases' => ['foo', 'bar', 'baz'],
+			'tables' => ['foobar', 'foobaz', 'barbaz'],
+		];
 
-	public function action_download()
-	{
-		$this->response->body(readfile(APPPATH.'local/download.zip'));	
-		$this->response->header('Content-Type: application/zip');
-		$this->response->header('Content-Disposition: attachment; filename="form-download.zip"');
-		$this->response->header('Content-Length: '.$this->response->content_length());
+		$tpl = $m->loadTemplate('form/login.mustache');
+
+		$this->content = $tpl->render($data);
+
+		if ($this->request->method == 'POST')
+		{
+			$this->content .= '<pre>'.var_export($this->request->data, true).'</pre';
+		}
 	}
 
 }

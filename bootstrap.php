@@ -2,18 +2,20 @@
 
 function autoload($class)
 {
-	$classpath = str_replace('_', DIRECTORY_SEPARATOR, $class);
+	$tmp_classpath = str_replace('_', DIRECTORY_SEPARATOR, $class);
 
-	$classpath = APPPATH.DIRECTORY_SEPARATOR.'Class'.DIRECTORY_SEPARATOR.$classpath.'.php';
+	$classdir  = APPPATH.DIRECTORY_SEPARATOR.'Class'.DIRECTORY_SEPARATOR;
+
+	$classpath = $classdir.$tmp_classpath.'.php';
 
 	if (file_exists($classpath))
 	{
 		require $classpath;
 	}
-	else
-	{
-		throw new Exception('Class '.$class.' could not be loaded');
-	}
 }
 
 spl_autoload_register('autoload');
+
+// Register Mustache autoloader
+require APPPATH.'lib/mustache/src/Mustache/Autoloader.php';
+Mustache_Autoloader::register();
