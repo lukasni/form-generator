@@ -243,8 +243,7 @@ class Form_Parser_DB {
 		{
 			$result['attributes']['type'] = 'password';
 		}
-		else if ( (strpos($result['label'], 'email')  !== false) 
-			   || (strpos($result['label'], 'e-mail') !== false) )
+		else if ( (strpos($result['label'], 'email')  !== false) )
 		{
 			$result['attributes']['type'] = 'email';
 		}
