@@ -2,7 +2,7 @@
 
 abstract class Controller_Template extends Controller {
 
-	protected $template = "template";
+	protected $template = 'template';
 
 	protected $styles = array();
 	protected $scripts = array();
@@ -28,20 +28,20 @@ abstract class Controller_Template extends Controller {
 		$this->scripts[] = ['src' => 'js/vendor/jQuery.min.js'];
 		$this->scripts[] = ['src' => 'js/main.js'];
 
-		$this->base_url = "http://localhost/form-generator/";
-		$this->lang = 'en';
+		$this->base_url = Config::get('global', 'baseurl');
+		$this->lang = Config::get('global', 'language');
 
-		$this->charset = "utf-8";
+		$this->charset = 'utf-8';
 
 		$page_title = 'Form Generator';
 		$content = '';
 
-		$this->full_page = $this->request->isAjax();
+		$this->full_page = ! $this->request->isAjax();
 	}
 
 	public function after()
 	{
-		if ( ! $this->full_page )
+		if ( $this->full_page )
 		{
 			$view_template = new View_Template();
 

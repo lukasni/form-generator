@@ -34,4 +34,18 @@ EOT;
 		$this->content = "Test!";
 	}
 
+	public function action_config()
+	{
+		var_dump(Config::get('mustache', 'default'));
+	}
+
+	public function action_uri()
+	{
+		$uri = str_replace(BASEURL, '', $_SERVER['REQUEST_URI']);
+		$sname = $_SERVER['PATH_INFO'];
+		$query = $_SERVER['QUERY_STRING'];
+
+		echo $uri,'<br>',$sname,'<br>',$query ;
+	}
+
 }

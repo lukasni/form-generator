@@ -6,13 +6,13 @@ class Controller_Database extends Controller_Template {
 	{
 		$m = Mustache::factory();
 
-		$data = [
+		$view = [
 			'form_action' => 'Database/generate',
 		];
 
 		$tpl = $m->loadTemplate('form/login.mustache');
 
-		$this->content = $tpl->render($data);
+		$this->content = $tpl->render($view);
 	}
 
 	public function action_getDB()
@@ -62,7 +62,7 @@ class Controller_Database extends Controller_Template {
 
 		$parser = new Form_Parser_DB();
 		$writer = new Form_Writer();
-		$writer->init('', 'POST', ['class' => 'form-vertical', 'id' => 'output']);
+		$writer->init('', 'post', ['class' => 'form-vertical', 'id' => 'output']);
 
 		foreach ($fields as $line)
 		{
@@ -86,6 +86,23 @@ class Controller_Database extends Controller_Template {
 
 	public function action_download()
 	{
-		$this->content = $this->request->data('code');
+		$model = new Model_Zip();
+
+		$view = [
+			'form' => $this->request->data('code'),
+		];
+
+		$m = Mustache::factory();
+		$output = $m->loadTemplate('download/index');
+
+		$model->addFile($output->render($view));
+
+		$this->full_page = false;
+
+		$this->content = $model->read();
+
+		$this->response->header('Content-Type: application/zip');
+		$this->response->header('Content-Length: '.strlen($this->content));
+		$this->response->header('Content-Disposition: attachment; filename="form-download.zip"');
 	}
 }

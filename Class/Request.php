@@ -72,16 +72,11 @@ class Request {
 			return self::$initial;
 		}
 
-		$uri = str_replace(BASEURL, '', $_SERVER['REQUEST_URI']);
-		$query_start = strpos($uri, '?');
-		$get_params = '';
-
-		if ( $query_start !== false )
-		{
-			$get_params = substr($uri, $query_start+1);
-			$uri = substr($uri, 0, $query_start);
-		}
-
+		$uri = Arr::get($_SERVER, 'PATH_INFO', '');
+		$uri = ltrim($uri, '/');
+		
+		$get_params = Arr::get($_SERVER, 'QUERY_STRING', '');
+		
 		$url_tokens = explode('/', $uri);
 
 		$controller	= !empty($url_tokens['0']) ? $url_tokens[0] : '';

@@ -2,7 +2,7 @@
 	# Turn on URL rewriting
 	RewriteEngine On
 
-	# Installation directory
+	# Base for all rewriting. Set this to /path/to/app/public/
 	RewriteBase /form-generator/
 
 	# Protect hidden files from being viewed
@@ -19,5 +19,5 @@
 	RewriteCond %{REQUEST_FILENAME} !-d
 
 	# Rewrite all other URLs to index.php?URL
-	RewriteRule .* index.php?$0 [PT]
+	RewriteRule .* index.php/$0 [PT]
 </IfModule>
