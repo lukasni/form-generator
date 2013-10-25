@@ -1,28 +1,26 @@
 <h1>Database Login</h1>
 
 <form action="{{form_action}}" method="post" class="form-vertical" id="dblogin">
-	<fieldset>
-		<legend>Database Info</legend>
 
-		<label for="host">DB Host</label>
-		<input type="text" name="host" id="host" required>
+	<label for="host">DB Host</label>
+	<input type="text" name="host" id="host" required>
 
-		<label for="user">DB User</label>
-		<input type="text" name="user" id="user" required>
+	<label for="user">DB User</label>
+	<input type="text" name="user" id="user" required>
 
-		<label for="password">DB Password</label>
-		<input type="password" name="password" id="password" >
+	<label for="password">DB Password</label>
+	<input type="password" name="password" id="password" >
 
-		<label for="database">Database</label>
-		<select name="database" id="database" >
-			<option value="">Not loaded</option>
-		</select>
+	<label for="database">Database</label>
+	<select name="database" id="database" >
+		<option value="">Not loaded</option>
+	</select>
 
-		<label for="table">Table</label>
-		<select name="table" id="table" >
-			<option value="">Not loaded</option>
-		</select>
+	<label for="table">Table</label>
+	<select name="table" id="table" >
+		<option value="">Not loaded</option>
+	</select>
 
-		<button>Generate Form</button>
-	</fieldset>
+	<button>Generate Form</button>
+	
 </form>

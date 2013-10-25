@@ -13,11 +13,6 @@ class Controller_Database extends Controller_Template {
 		$tpl = $m->loadTemplate('form/login.mustache');
 
 		$this->content = $tpl->render($data);
-
-		if ($this->request->method == 'POST')
-		{
-			$this->content .= '<pre>'.var_export($this->request->data, true).'</pre';
-		}
 	}
 
 	public function action_getDB()
@@ -79,6 +74,18 @@ class Controller_Database extends Controller_Template {
 		$writer->putLine('<button type="submit">Submit</button>');
 		$writer->putLine('<div class="spacer"></div>');
 
-		$this->content = $writer->render();
+		$view = [
+			'code' => $writer->render(),
+		];
+
+		$m = Mustache::factory();
+		$output = $m->loadTemplate('form/output');
+
+		$this->content = $output->render($view);
+	}
+
+	public function action_download()
+	{
+		$this->content = $this->request->data('code');
 	}
 }
