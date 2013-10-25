@@ -19,3 +19,6 @@ spl_autoload_register('autoload');
 // Register Mustache autoloader
 require APPPATH.'lib/mustache/src/Mustache/Autoloader.php';
 Mustache_Autoloader::register();
+
+// Require htmLawed functions
+require_once APPPATH.'lib/htmLawed/htmLawed.php';
