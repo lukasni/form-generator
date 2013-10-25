@@ -2,20 +2,14 @@
 
 class Router {
 
-	const CONTROLLER_PREFIX = 'Controller_';
-	const ACTION_PREFIX = 'action_';
-
-	const DEFAULT_CONTROLLER = 'Index';
-	const DEFAULT_ACTION = 'index';
-
 	public static function getController(Request $request)
 	{
-		$controller = self::CONTROLLER_PREFIX;
+		$controller = Config::get('router', 'prefix.controller');
 		$result = null;
 
 		if ( $request->controller == '' )
 		{
-			$controller .= self::DEFAULT_CONTROLLER;
+			$controller .= Config::get('router', 'default.controller');
 		}
 		else
 		{
@@ -34,11 +28,11 @@ class Router {
 
 	public static function executeAction($request, Controller &$controller)
 	{
-		$action = self::ACTION_PREFIX;
+		$action = Config::get('router', 'prefix.action');
 
 		if ( $request->action == '' )
 		{
-			$action .= self::DEFAULT_ACTION;
+			$action .= Config::get('router', 'default.action');
 		}
 		else
 		{

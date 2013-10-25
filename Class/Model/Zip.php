@@ -10,7 +10,7 @@ class Model_Zip {
 	{
 		if ( is_null($source) )
 		{
-			$source = Config::get('global', 'download.source');
+			$source = Config::get('download', 'source');
 		}
 
 		$this->source 	= $source;
@@ -38,7 +38,7 @@ class Model_Zip {
 	{
 		if ( is_null($name) )
 		{
-			$name = Config::get('global', 'download.index');
+			$name = Config::get('download', 'index');
 		}
 
 		$this->zip->deleteName($name);
