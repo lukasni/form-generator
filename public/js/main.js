@@ -63,4 +63,12 @@ $(document).ready(function(){
 			return false;
 		}
 	});
+
+	$("form#output").submit(function(e) {
+		if (e.preventDefault) {
+			e.preventDefault();
+		} else {
+			e.returnValue = false;
+		}
+	});
 });
