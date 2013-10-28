@@ -4,13 +4,11 @@ class Controller_Database extends Controller_Template {
 
 	public function action_login()
 	{
-		$m = Mustache::factory();
-
 		$view = [
 			'form_action' => 'Database/generate',
 		];
 
-		$tpl = $m->loadTemplate('form/login.mustache');
+		$tpl = Mustache::factory('form/login.mustache');
 
 		$this->content = $tpl->render($view);
 	}
@@ -29,6 +27,8 @@ class Controller_Database extends Controller_Template {
 		$model = new Model_Database($dbhost, $dbuser, $dbpass);
 
 		$this->content = json_encode($model->showDatabases());
+
+		$this->response->header('Content-type: application/json');
 	}
 
 	public function action_getTbl()
@@ -72,16 +72,14 @@ class Controller_Database extends Controller_Template {
 		}
 
 		$writer->putLine('<button type="submit">Submit</button>');
-		$writer->putLine('<div class="spacer"></div>');
 
 		$view = [
 			'code' => $writer->render(),
 		];
 
-		$m = Mustache::factory();
-		$output = $m->loadTemplate('form/output');
+		$tpl = Mustache::factory('form/output');
 
-		$this->content = $output->render($view);
+		$this->content = $tpl->render($view);
 	}
 
 	public function action_download()
@@ -92,10 +90,9 @@ class Controller_Database extends Controller_Template {
 			'form' => $this->request->data('code'),
 		];
 
-		$m = Mustache::factory();
-		$output = $m->loadTemplate('download/index');
+		$tpl = Mustache::factory('download/index');
 
-		$model->addFile($output->render($view));
+		$model->addFile($tpl->render($view));
 
 		$this->full_page = false;
 

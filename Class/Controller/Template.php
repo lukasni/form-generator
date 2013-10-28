@@ -26,6 +26,8 @@ abstract class Controller_Template extends Controller {
 		$this->styles[]	= ['href' => 'css/form.css'];
 
 		$this->scripts[] = ['src' => 'js/vendor/jQuery.min.js'];
+		$this->scripts[] = ['src' => 'js/vendor/webforms/webforms2-p.js'];
+		$this->scripts[] = ['src' => 'js/fallback.js'];
 		$this->scripts[] = ['src' => 'js/main.js'];
 
 		$this->base_url = Config::get('global', 'baseurl');
@@ -55,9 +57,7 @@ abstract class Controller_Template extends Controller {
 			$view_template->page_title 	= $this->page_title;
 			$view_template->content 	= $this->content;
 
-			$m = Mustache::factory();
-
-			$tpl = $m->loadTemplate($this->template);
+			$tpl = Mustache::factory($this->template);
 
 			$this->response->body($tpl->render($view_template));
 		}
