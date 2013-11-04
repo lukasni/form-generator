@@ -56,6 +56,11 @@ class Form_Parser_DB {
 			case 'set':
 				return $this->parseSet($line);
 
+			case 'boolean':
+			case 'bool':
+			case 'bit':
+				return $this->parseBool($line);
+
 			case 'text':
 			case 'tinytext':
 			case 'mediumtext':
@@ -94,12 +99,14 @@ class Form_Parser_DB {
 	 * Parser for ENUM Types. 5 or more ENUM options will generate a Select dropdown,
 	 * less than 5 Options will generate a group of radio buttons.
 	 * @param  array  $line Single row of the database result.
-	 * @return array        Array readable by Form_Writer representing the database field.
+	 * @return array        Array readable by Form_Writer representing the form field.
 	 */
 	protected function parseEnum(array $line)
 	{
-		// Get all options from the enum.
-		$enum_options = str_replace('enum(', '', str_replace(')', '', $line['Type']));
+		// Get all options from the enum or set.
+		$start = strpos($line['Type'], '(')+1;
+		$length = strpos($line['Type'], ')')-$start;
+		$enum_options = substr($line['Type'], $start, $length);
 		$options = str_getcsv($enum_options, ',', "'");
 
 		$result = $this->prepareResult($line);
@@ -126,9 +133,40 @@ class Form_Parser_DB {
 		return $result;
 	}
 
+	/**
+	 * Parser for SET type. Uses parseEnum for basic data and changes Radiobuttons to checkboxes,
+	 * select dropdown to multiselect list.
+	 * @param  array  $line Single row of the databse result
+	 * @return array        Array readable by Form_Writer representing the form field.
+	 */
 	protected function parseSet(array $line)
 	{
-		throw new Exception('Parsing for datatype SET has not yet been implemented.');
+		$result = $this->parseEnum($line);
+
+		if ( $result['type'] == 'select' )
+		{
+			$result['attributes']['multiple'] = 'multiple';
+		}
+		else
+		{
+			$result['attributes']['type'] = 'checkbox';
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Parser for BOOLEAN Type
+	 * @param  array  $line [description]
+	 * @return [type]       [description]
+	 */
+	protected function parseBool(array $line)
+	{
+		$result = $this->prepareResult($line);
+		$result['required'] = false;
+		$result['attributes']['type'] = 'checkbox';
+
+		return $result;
 	}
 
 	/**
@@ -193,6 +231,16 @@ class Form_Parser_DB {
 	protected function parseNum(array $line, $type)
 	{
 		$result = $this->prepareResult($line);
+
+		// Determine the max length
+		$start = strpos($line['Type'], '(')+1;
+		$length = strpos($line['Type'], ')')-$start;
+		$maxlength = substr($line['Type'], $start, $length);
+
+		if ( $type == 'tinyint' && $maxlength == '1')
+		{
+			return $this->parseBool($line);
+		}
 
 		$result['attributes']['type'] = 'number';
 
