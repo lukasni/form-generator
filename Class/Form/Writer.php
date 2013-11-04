@@ -138,7 +138,11 @@ class Form_Writer {
 		if ($data['required'] === true)
 		{
 			HTML::addAttribute('required', 'required', $data['attributes']);
-			array_unshift($data['options'], ['value' => '', 'label' => 'Please select...']);
+
+			if ( ! array_key_exists('multiple', $data['attributes']) )
+			{
+				array_unshift($data['options'], ['value' => '', 'label' => 'Please select...']);
+			}
 		}
 		
 		// Generate label and select tag, add to output.
@@ -176,6 +180,8 @@ class Form_Writer {
 
 			$title = '<label>'.$data['label'].'</label>';
 			$this->putLine($title);
+			$this->putLine('<div class="inputgroup">')
+				 ->indent++;
 
 			foreach ( $data['options'] as $option)
 			{
@@ -192,6 +198,9 @@ class Form_Writer {
 					 ->indent--;
 				$this->putLine($label_close);
 			}
+
+			$this->indent--;
+			$this->putLine('</div>');
 		}
 		else
 		{
