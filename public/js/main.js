@@ -31,7 +31,7 @@ $(document).ready(function(){
 						.text("Not loaded")
 						.val("")
 				);
-				$(".error").text(errmsg);
+				$(".error").text(result.responseText);
 				$(".error").removeClass('hidden');
 			}
 		});
