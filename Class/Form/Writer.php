@@ -41,12 +41,13 @@ class Form_Writer {
 	 */
 	public function finish()
 	{
-		if ( $this->fieldset )
-		{
-			$this->indent--;
-			$this->putLine('</fieldset>');
-			$this->fieldset = false;
-		}
+		$this->fieldset(['legend' => 'Form Controls']);
+		$this->btnReset();
+		$this->btnSubmit();
+
+		$this->indent--;
+		$this->putLine('</fieldset>');
+		$this->fieldset = false;
 
 		$this->indent--;
 		$this->putLine('</form>');
@@ -68,6 +69,16 @@ class Form_Writer {
 		}
 		
 		return $this->output;
+	}
+
+	public function btnSubmit($title = 'Submit')
+	{
+		$this->putLine('<button type="submit">'.$title.'</button>');
+	}
+
+	public function btnReset($title = 'Reset')
+	{
+		$this->putLine('<button type="reset">'.$title.'</button>');
 	}
 
 	/**
@@ -169,7 +180,7 @@ class Form_Writer {
 		HTML::addAttribute('name', $data['name'], $data['attributes']);
 
 		// Check if select field is required.
-		if ($data['required'] === true)
+		if ( $data['required'] === true && $data['attributes']['type'] != 'checkbox' )
 		{
 			HTML::addAttribute('required', 'required', $data['attributes']);
 		}
@@ -182,6 +193,8 @@ class Form_Writer {
 			$this->putLine($title);
 			$this->putLine('<div class="inputgroup">')
 				 ->indent++;
+
+			$data['attributes']['name'] .= '[]';
 
 			foreach ( $data['options'] as $option)
 			{

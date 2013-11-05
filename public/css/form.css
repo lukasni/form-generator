@@ -2,6 +2,7 @@
 	background: #929487;
 	font-size: 86%;
 	color: #F4F5ED;
+	overflow: hidden;
 }
 .form-vertical label {
 	display: block;
@@ -12,6 +13,10 @@
 	box-sizing: border-box;	
 	float: left;
 	clear: left;
+}
+
+.form-vertical legend {
+	color: #F4F5ED;
 }
 
 .form-vertical input,
@@ -37,11 +42,38 @@
 	padding: 0;
 }
 
-.form-vertical button {
-	clear: both;
-	margin-left: 150px;
+.form-vertical input[type=radio],
+.form-vertical input[type=checkbox] {
+	width: 24px;
+	padding: 0;
+	margin: 0 5px;
+}
+
+.form-vertical select[multiple] {
+	height: 92px;
+}
+
+.form-vertical .inputgroup {
+	float: left;
 	width: 200px;
+	margin-bottom: 18px;
+	margin-top: -3px;
+}
+
+.form-vertical .inputgroup label {
+	display: inline-block;
+	width: 200px;
+	height: 24px;
+	line-height: 22px;
+	text-align: left;
+	padding-left: 0;
+}
+
+.form-vertical button {
+	width: 49%;
 	height: 31px;
+	box-sizing: border-box;
+	float: left;
 	border: 0;
 	background: #de5a51;
 	text-align: center;
@@ -49,6 +81,10 @@
 	color: #F4F5ED;
 	font-size: 11px;
 	font-weight: bold;
+}
+
+.form-vertical button:last-child {
+	float: right;
 }
 
 @media only screen 

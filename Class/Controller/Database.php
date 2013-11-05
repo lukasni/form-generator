@@ -64,14 +64,14 @@ class Controller_Database extends Controller_Template {
 		$writer = new Form_Writer();
 		$writer->init('', 'post', ['class' => 'form-vertical', 'id' => 'output']);
 
+		$writer->fieldset(['legend' => ucfirst($tbl)]);
+
 		foreach ($fields as $line)
 		{
 			$data = $parser->parseLine($line);
 			if ( $data !== false)
 				$writer->{$data['type']}($data);
 		}
-
-		$writer->putLine('<button type="submit">Submit</button>');
 
 		$view = [
 			'code' => $writer->render(),
