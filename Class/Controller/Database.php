@@ -27,6 +27,7 @@ class Controller_Database extends Controller_Template {
 	 */
 	public function action_getDB()
 	{
+		// Only allow ajax requests
 		if ( ! $this->request->isAjax() )
 		{
 			throw new Exception("No direct access to this action.");
@@ -36,20 +37,21 @@ class Controller_Database extends Controller_Template {
 		$dbuser = $this->request->data('user');
 		$dbpass = $this->request->data('password', '');
 
+		// Try to connect to database.
 		try
 		{	
 			$model = new Model_Database($dbhost, $dbuser, $dbpass);
 		
 			$this->content = json_encode($model->showDatabases());
+			$this->response->header('Content-type: application/json');
 		}
 		catch (Exception $e)
 		{
 			$this->content = 'Cannot load databases. Please check your login information.';
 
-			$this->response->statusCode(400);
+			// Set the error code to ensure clientside error handling
+			$this->response->statusCode(500);
 		}
-
-		$this->response->header('Content-type: application/json');
 	}
 
 	/**
@@ -58,6 +60,7 @@ class Controller_Database extends Controller_Template {
 	 */
 	public function action_getTbl()
 	{
+		// Only allow ajax requests
 		if ( ! $this->request->isAjax() )
 		{
 			throw new Exception("No direct access to this action.");
@@ -68,20 +71,21 @@ class Controller_Database extends Controller_Template {
 		$dbpass = $this->request->data('password', '');
 		$db 	= $this->request->data('database');
 
+		// Try to connect to database.
 		try
 		{
 			$model = new Model_Database($dbhost, $dbuser, $dbpass, $db);
 
 			$this->content = json_encode($model->showTables());	
+			$this->response->header('Content-type: application/json');
 		}
 		catch (Exception $e)
 		{
 			$this->content = "Can't load tables. Please select a valid database first.";
 
-			$this->response->statusCode(400);
+			// Set the error code to ensure clientside error handling
+			$this->response->statusCode(500);
 		}
-
-		$this->response->header('Content-type: application/json');
 	}
 
 	/**
@@ -90,6 +94,7 @@ class Controller_Database extends Controller_Template {
 	 */
 	public function action_generate()
 	{
+		// Set up the login data
 		$dbhost = $this->request->data('host');
 		$dbuser = $this->request->data('user');
 		$dbpass = $this->request->data('password', '');
@@ -98,14 +103,19 @@ class Controller_Database extends Controller_Template {
 
 		$model = new Model_Database($dbhost, $dbuser, $dbpass, $db);
 
+		// Fetch table fields
 		$fields = $model->describe($tbl);
 
+		// Initiate parser and writer
 		$parser = new Form_Parser_DB();
 		$writer = new Form_Writer();
+
+		// Initilize the form
 		$writer->init('', 'post', ['class' => 'form-vertical', 'id' => 'output']);
 
 		$writer->fieldset(['legend' => ucfirst($tbl)]);
 
+		// Loop through all fields, pass the parsed field to the writer
 		foreach ($fields as $line)
 		{
 			$data = $parser->parseLine($line);
@@ -113,12 +123,14 @@ class Controller_Database extends Controller_Template {
 				$writer->{$data['type']}($data);
 		}
 
+		// Set up view data
 		$view = [
 			'code' => $writer->render(),
 		];
 
 		$tpl = Mustache::factory('form/output');
 
+		// Render the output
 		$this->content = $tpl->render($view);
 	}
 
@@ -127,20 +139,26 @@ class Controller_Database extends Controller_Template {
 	 */
 	public function action_download()
 	{
+		// Create  a new temporary zip file
 		$model = new Model_Zip();
 
 		$view = [
 			'form' => $this->request->data('code'),
 		];
 
+		// Set up the index template
 		$tpl = Mustache::factory('download/index');
 
+		// Add index file to zip
 		$model->addFile($tpl->render($view));
 
+		// Make sure the template is not added to the download
 		$this->full_page = false;
 
+		// Read the zip file as hex data, pass it to the response body
 		$this->content = $model->read();
 
+		// Set up headers to ensure correct download of the zip file.
 		$this->response->header('Content-Type: application/zip');
 		$this->response->header('Content-Length: '.strlen($this->content));
 		$this->response->header('Content-Disposition: attachment; filename="form-download.zip"');

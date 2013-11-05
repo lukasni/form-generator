@@ -287,16 +287,17 @@ class Form_Parser_DB {
 		$result = $this->prepareResult($line);
 
 		// Check if the field name implies a specific input type
-		if ( strpos($result['label'], 'password') !== false)
+		if ( (strpos($line['Field'], 'password') !== false)
+		  || (strpos($line['Field'], 'passwort') !== false) )
 		{
 			$result['attributes']['type'] = 'password';
 		}
-		else if ( (strpos($result['label'], 'email')  !== false) )
+		else if ( (strpos($line['Field'], 'email')  !== false) )
 		{
 			$result['attributes']['type'] = 'email';
 		}
-		else if ( (strpos($result['label'], 'url')  !== false)
-			   || (strpos($result['label'], 'link') !== false) )
+		else if ( (strpos($line['Field'], 'url')  !== false)
+			   || (strpos($line['Field'], 'link') !== false) )
 		{
 			$result['attributes']['type'] = 'url';
 		}

@@ -71,11 +71,19 @@ class Form_Writer {
 		return $this->output;
 	}
 
+	/**
+	 * Adds a submit button to output.
+	 * @param  string $title Text shown in the button
+	 */
 	public function btnSubmit($title = 'Submit')
 	{
 		$this->putLine('<button type="submit">'.$title.'</button>');
 	}
 
+	/**
+	 * Adds a reset button to output
+	 * @param  string $title Text shown in the button.
+	 */
 	public function btnReset($title = 'Reset')
 	{
 		$this->putLine('<button type="reset">'.$title.'</button>');
@@ -102,6 +110,11 @@ class Form_Writer {
 		return $this;
 	}
 
+	/**
+	 * Add a textarea to output
+	 * @uses HTML     for generating tags and preparing attributes.
+	 * @param  array  $data Data prepared by a field parser
+	 */
 	public function textarea(array $data)
 	{
 		// Add attributes using HTML::addAttribute to ensure user preferences are kept.
@@ -122,6 +135,11 @@ class Form_Writer {
 			 ->putLine($input);
 	}
 
+	/**
+	 * Adda button to output
+	 * @uses HTML     for generating tags and preparing attributes.
+	 * @param  array  $data Data prepared by a field parser
+	 */
 	public function button(array $data)
 	{
 		// Add attributes using HTML::addAttribute to ensure user preferences are kept.
@@ -173,6 +191,11 @@ class Form_Writer {
 		$this->putLine('</select>');
 	}
 
+	/**
+	 * Adds an input field to output
+	 * @uses HTML     for generating tags and preparing attributes.
+	 * @param  array  $data Data array prepared by a field parser.
+	 */
 	public function input(array $data)
 	{
 		// Add attributes using HTML::addAttribute to ensure user preferences are kept.
