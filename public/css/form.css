@@ -70,9 +70,10 @@
 }
 
 .form-vertical button {
-	width: 49%;
+	width: 200px;
 	height: 31px;
 	box-sizing: border-box;
+	margin-left: 150px;
 	float: left;
 	border: 0;
 	background: #de5a51;
@@ -83,8 +84,30 @@
 	font-weight: bold;
 }
 
-.form-vertical button:last-child {
+.form-vertical button[type="submit"] {
+	background: #515ade;
+}
+
+.form-vertical fieldset button {
+	float: left;
+	margin: 0;
+	width: 49%;
+}
+
+.form-vertical fieldset button:last-child {
 	float: right;
+}
+
+.form-vertical .hidden {
+	display: none;
+}
+
+.form-vertical .error {
+	border: 1px solid #e33;
+	background: #fcc;
+	color: #e33;
+	padding: 5px;
+	margin-bottom: 1em;
 }
 
 @media only screen 

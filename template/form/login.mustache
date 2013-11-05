@@ -9,17 +9,19 @@
 	<input type="text" name="user" id="user" required>
 
 	<label for="password">DB Password</label>
-	<input type="password" name="password" id="password" >
+	<input type="password" name="password" id="password">
 
 	<label for="database">Database</label>
-	<select name="database" id="database" >
+	<select name="database" id="database" required>
 		<option value="">Not loaded</option>
 	</select>
 
 	<label for="table">Table</label>
-	<select name="table" id="table" >
+	<select name="table" id="table" required>
 		<option value="">Not loaded</option>
 	</select>
+
+	<div class="error hidden" style="clear: both"></div>
 
 	<button>Generate Form</button>
 	

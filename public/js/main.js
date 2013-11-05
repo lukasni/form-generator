@@ -1,38 +1,58 @@
+
+
 $(document).ready(function(){
-	$("#password").blur(function() {
-		var data = $("form#dblogin").serialize();
-		$("select#database").empty();
-		$.getJSON(
-			'Database/getDB',
-			data,
-			function(result) {
+
+	populateSelect = function(target, requesturl, errmsg) {
+		var rdata = target.closest("form").serialize();
+		$.ajax({
+			url: requesturl,
+			dataType: 'json',
+			data: rdata,
+			success: function( result ) {
+				$('.error').addClass('hidden');
+				target.empty();
+				target.append(
+					$("<option disabled></option>")
+						.text("Please select...")
+						.val("")
+				);
 				$.each(result, function(key, value) {
-					$("select#database").append(
+					target.append(
 						$("<option></option>")
 							.text(value)
 							.val(value)
 					);
 				});
+			},
+			error: function( result ) {
+				target.empty();
+				target.append(
+					$("<option disabled></option>")
+						.text("Not loaded")
+						.val("")
+				);
+				$(".error").text(errmsg);
+				$(".error").removeClass('hidden');
 			}
+		});
+	};
+
+	$("#password").blur(function() {
+		populateSelect(
+			$("select#database"),
+			"Database/getDB",
+			"Can't load databases. Please check login information"
 		);
 	});
 
-	$("#database").blur(function() {
-		var data = $("form#dblogin").serialize();
-		$("select#table").empty();
-		$.getJSON(
-			'Database/getTbl',
-			data,
-			function(result) {
-				$.each(result, function(key, value) {
-					$("select#table").append(
-						$("<option></option>")
-							.text(value)
-							.val(value)
-					);
-				});
-			}
-		);
+	$("#database").change(function() {
+		if ( $("select#database").val() !== "" && $("select#database").val() !== null ) {
+			populateSelect(
+				$("select#table"),
+				"Database/getTbl",
+				"Can't load tables. Please select a valid database"
+			);
+		}
 	});
 
 	$("#code").bind('input propertychange', function() {
