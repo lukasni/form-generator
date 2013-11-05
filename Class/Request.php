@@ -49,7 +49,7 @@ class Request {
 		return $this->$name;
 	}
 
-	private function __construct($uri, $controller, $action, $params = array(), $method = 'GET', $requested_with = NULL, $data = NULL)
+	public function __construct($uri, $controller, $action, $params = array(), $method = 'GET', $requested_with = NULL, $data = NULL)
 	{
 		$this->uri = $uri;
 		$this->controller = $controller;
