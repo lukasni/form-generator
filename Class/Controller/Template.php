@@ -27,7 +27,6 @@ abstract class Controller_Template extends Controller {
 
 		$this->scripts[] = ['src' => 'js/vendor/jQuery.min.js'];
 		$this->scripts[] = ['src' => 'js/vendor/webforms/webforms2-p.js'];
-		$this->scripts[] = ['src' => 'js/fallback.js'];
 		$this->scripts[] = ['src' => 'js/main.js'];
 
 		$this->base_url = Config::get('global', 'baseurl');
