@@ -14,7 +14,7 @@ class Model_Zip {
 		}
 
 		$this->source 	= $source;
-		$this->tmpfile 	= tempnam('tmp', 'zip');
+		$this->tmpfile 	= tempnam(APPPATH.'tmp', 'zip');
 
 		copy($this->source, $this->tmpfile);
 
