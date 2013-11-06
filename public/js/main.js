@@ -23,8 +23,10 @@ $(document).ready(function(){
 							.val(value)
 					);
 				});
+				target.removeAttr('disabled');
 			},
 			error: function( result ) {
+				target.addAttr('disabled');
 				target.empty();
 				target.append(
 					$("<option disabled></option>")
